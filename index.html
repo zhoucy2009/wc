@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wealth Club - Video Voting</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-title">Wealth Club</span>
+        <span class="brand-subtitle">Video Voting</span>
+      </div>
+      <a class="button" href="#upload">Upload video</a>
+    </header>
+
+    <main class="page">
+      <section class="hero">
+        <div>
+          <h1>Curate the best videos together.</h1>
+          <p>
+            Upload your latest clips, share with the community, and vote for the
+            content that deserves the spotlight.
+          </p>
+        </div>
+        <div class="hero-highlights">
+          <div>
+            <h3>Simple uploads</h3>
+            <p>Share a file or link in seconds.</p>
+          </div>
+          <div>
+            <h3>Community votes</h3>
+            <p>Track what resonates most.</p>
+          </div>
+          <div>
+            <h3>Focused feed</h3>
+            <p>Keep the highest-rated videos on top.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="upload" class="card">
+        <h2>Upload a video</h2>
+        <form id="upload-form">
+          <label class="field">
+            <span>Title</span>
+            <input id="title-input" type="text" placeholder="Video title" required />
+          </label>
+          <label class="field">
+            <span>Video file</span>
+            <div class="file-picker">
+              <button id="file-button" class="file-button" type="button">Choose file</button>
+              <span id="file-name" class="file-name">No file selected</span>
+              <input id="file-input" class="file-input" type="file" accept="video/*" />
+            </div>
+          </label>
+          <label class="field">
+            <span>Or video URL</span>
+            <input
+              id="url-input"
+              type="url"
+              placeholder="https://example.com/video.mp4"
+            />
+          </label>
+          <p class="hint">Provide a file or a URL. Reloading the page clears uploads.</p>
+          <button type="submit">Upload</button>
+          <p id="form-error" class="error" role="alert" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="section-header">
+          <h2>Videos</h2>
+          <span id="video-count" class="chip">0</span>
+        </div>
+        <div id="video-list" class="video-list"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

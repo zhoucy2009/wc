@@ -9,6 +9,8 @@ const count = document.querySelector("#video-count");
 const error = document.querySelector("#form-error");
 
 const videos = [];
+let hasUploaded = false;
+const votedIds = new Set();
 
 const updateCount = () => {
   count.textContent = String(videos.length);
@@ -29,6 +31,20 @@ fileButton.addEventListener("click", () => {
 fileInput.addEventListener("change", () => {
   fileName.textContent = fileInput.files[0]?.name ?? "No file selected";
 });
+
+const lockUploadForm = () => {
+  const submitBtn = form.querySelector("button[type=submit]");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Already uploaded";
+  submitBtn.style.opacity = "0.5";
+  submitBtn.style.cursor = "not-allowed";
+  titleInput.disabled = true;
+  fileButton.disabled = true;
+  fileButton.style.opacity = "0.5";
+  fileButton.style.cursor = "not-allowed";
+  urlInput.disabled = true;
+  showError("You have already submitted a video.");
+};
 
 const createVideoCard = (video) => {
   const wrapper = document.createElement("article");
@@ -53,13 +69,22 @@ const createVideoCard = (video) => {
   const voteButton = document.createElement("button");
   voteButton.className = "vote-button";
   voteButton.type = "button";
-  voteButton.textContent = "Vote";
+
+  const alreadyVoted = votedIds.has(video.id);
+  voteButton.textContent = alreadyVoted ? "Voted" : "Vote";
+  if (alreadyVoted) {
+    voteButton.disabled = true;
+    voteButton.style.opacity = "0.5";
+    voteButton.style.cursor = "not-allowed";
+  }
 
   const voteCount = document.createElement("span");
   voteCount.className = "vote-count";
   voteCount.textContent = `${video.votes} votes`;
 
   voteButton.addEventListener("click", () => {
+    if (votedIds.has(video.id)) return;
+    votedIds.add(video.id);
     video.votes += 1;
     renderVideos(video.id);
   });
@@ -74,8 +99,8 @@ const renderVideos = (highlightId = "") => {
   [...videos]
     .sort((a, b) => b.votes - a.votes)
     .forEach((video) => {
-    list.append(createVideoCard(video));
-  });
+      list.append(createVideoCard(video));
+    });
   updateCount();
 
   if (highlightId) {
@@ -98,6 +123,11 @@ const renderVideos = (highlightId = "") => {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   clearError();
+
+  if (hasUploaded) {
+    showError("You have already submitted a video.");
+    return;
+  }
 
   const title = titleInput.value.trim();
   const file = fileInput.files[0];
@@ -135,7 +165,9 @@ form.addEventListener("submit", (event) => {
   }
 
   videos.unshift(video);
+  hasUploaded = true;
   renderVideos();
+  lockUploadForm();
 
   form.reset();
   fileName.textContent = "No file selected";
